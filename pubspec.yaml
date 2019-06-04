@@ -1,8 +1,8 @@
 name: math_tex
 description: A new Flutter plugin.
 version: 0.0.1
-author:
-homepage:
+author: nhapt <phamnha0209.1995@gmail.com>
+homepage: https://github.com/NhaPCS/MathTex
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
