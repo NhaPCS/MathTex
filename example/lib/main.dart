@@ -12,8 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
@@ -24,20 +22,20 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await MathTex.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+//    try {
+//      platformVersion = await MathTex.platformVersion;
+//    } on PlatformException {
+//      platformVersion = 'Failed to get platform version.';
+//    }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+//    if (!mounted) return;
+//
+//    setState(() {
+//      _platformVersion = platformVersion;
+//    });
   }
 
   @override
@@ -47,10 +45,28 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: MathTex(text: "\\(x^2\\)",),
+        body: Wrap(
+          spacing: 20,
+          children: <Widget>[
+            buildText("\\(x^2\\)"),
+            buildText("\\(x^3\\)"),
+            buildText("\\(x^4\\)"),
+            buildText("\\(x^5\\)")
+          ],
         ),
       ),
+    );
+  }
+
+  Widget buildText(String text) {
+    return SizedBox(
+      child: MathTex(
+        onMathjaxViewCreated: (controller) {
+          controller.setText(text);
+        },
+        fontSize: 15,
+      ),
+      height: 35,
     );
   }
 }

@@ -3,30 +3,68 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MathTex extends StatelessWidget {
-  final String text;
+typedef void MathTexCreatedCallback(MathTexController controller);
 
-  static const MethodChannel _channel =
-      const MethodChannel('plugins.com.nhapcs.math_tex/math_tex');
 
-  const MathTex({Key key, this.text}) : super(key: key);
+class MathTex extends StatefulWidget {
+  MathTex({
+    Key key,
+    this.onMathjaxViewCreated,
+    this.fontSize,
+  }) : super(key: key);
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
+  final MathTexCreatedCallback onMathjaxViewCreated;
+  final int fontSize;
 
+  @override
+  State<StatefulWidget> createState() => _MathTexState();
+}
+
+class _MathTexState extends State<MathTex> {
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidView(
         viewType: 'plugins.com.nhapcs.math_tex/math_tex',
-        onPlatformViewCreated: (int id) {
-          _channel.invokeMethod('setText', text);
+        onPlatformViewCreated: _onPlatformViewCreated,
+        creationParams: <String, dynamic>{
+          "fontSize": widget.fontSize,
         },
+        creationParamsCodec: new StandardMessageCodec(),
       );
     }
+//    if (defaultTargetPlatform == TargetPlatform.iOS) {
+//      return UiKitView(
+//        viewType: 'plugins.com.nhapcs.math_tex/math_tex',
+//        onPlatformViewCreated: _onPlatformViewCreated,
+//        creationParams: <String, dynamic>{
+//          "fontSize": widget.fontSize,
+//        },
+//        creationParamsCodec: new StandardMessageCodec(),
+//      );
+//    }
+
     return Text(
-        '$defaultTargetPlatform is not yet supported by the text_view plugin');
+        '$defaultTargetPlatform is not yet supported by the mathjax_view plugin');
+  }
+
+  void _onPlatformViewCreated(int id) {
+    if (widget.onMathjaxViewCreated == null) {
+      return;
+    }
+
+    widget.onMathjaxViewCreated(MathTexController._(id));
+  }
+}
+
+class MathTexController {
+  MathTexController._(int id)
+      : _channel = new MethodChannel('plugins.com.nhapcs.math_tex/math_tex_$id');
+
+  final MethodChannel _channel;
+
+  Future<void> setText(String text) async {
+    assert(text != null);
+    return _channel.invokeMethod('setText', text);
   }
 }

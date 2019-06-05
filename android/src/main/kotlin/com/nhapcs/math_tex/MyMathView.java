@@ -29,9 +29,9 @@ public class MyMathView extends WebView implements PlatformView, MethodChannel.M
     private final MethodChannel methodChannel;
 
 
-    public MyMathView(Context context, BinaryMessenger messenger) {
+    public MyMathView(Context context, BinaryMessenger messenger, int id) {
         super(context);
-        methodChannel = new MethodChannel(messenger, "plugins.com.nhapcs.math_tex/math_tex");
+        methodChannel = new MethodChannel(messenger, "plugins.com.nhapcs.math_tex/math_tex_" + id);
         methodChannel.setMethodCallHandler(this);
         configurationSettingWebView();
         setDefaultTextColor(context);

@@ -17,6 +17,6 @@ public class MathTexFactory extends PlatformViewFactory {
 
     @Override
     public PlatformView create(Context context, int i, Object o) {
-        return new MyMathView(context, binaryMessenger);
+        return new MyMathView(context, binaryMessenger, i);
     }
 }
