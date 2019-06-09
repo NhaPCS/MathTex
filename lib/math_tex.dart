@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 
 typedef void MathTexCreatedCallback(MathTexController controller);
 
-
 class MathTex extends StatefulWidget {
   MathTex({
     Key key,
@@ -21,9 +20,15 @@ class MathTex extends StatefulWidget {
 }
 
 class _MathTexState extends State<MathTex> {
+  MathTexController _mathTexController;
+
+
+  MathTexController get mathTexController => _mathTexController;
+
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
+      print("BUILD VIEW");
       return AndroidView(
         viewType: 'plugins.com.nhapcs.math_tex/math_tex',
         onPlatformViewCreated: _onPlatformViewCreated,
@@ -52,19 +57,31 @@ class _MathTexState extends State<MathTex> {
     if (widget.onMathjaxViewCreated == null) {
       return;
     }
+    print("NEW $id");
+    _mathTexController = MathTexController._(id);
+    widget.onMathjaxViewCreated(_mathTexController);
+  }
 
-    widget.onMathjaxViewCreated(MathTexController._(id));
+  @override
+  void dispose() {
+    _mathTexController = null;
+    super.dispose();
   }
 }
 
 class MathTexController {
   MathTexController._(int id)
-      : _channel = new MethodChannel('plugins.com.nhapcs.math_tex/math_tex_$id');
+      : _channel =
+            new MethodChannel('plugins.com.nhapcs.math_tex/math_tex_$id');
 
   final MethodChannel _channel;
 
   Future<void> setText(String text) async {
     assert(text != null);
     return _channel.invokeMethod('setText', text);
+  }
+
+  void dispose() {
+    _channel.invokeMethod('setText', "");
   }
 }

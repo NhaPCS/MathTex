@@ -4,6 +4,7 @@ package com.nhapcs.math_tex;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -31,6 +32,7 @@ public class MyMathView extends WebView implements PlatformView, MethodChannel.M
 
     public MyMathView(Context context, BinaryMessenger messenger, int id) {
         super(context);
+        Log.e("ID", id + " WTF  ");
         methodChannel = new MethodChannel(messenger, "plugins.com.nhapcs.math_tex/math_tex_" + id);
         methodChannel.setMethodCallHandler(this);
         configurationSettingWebView();
