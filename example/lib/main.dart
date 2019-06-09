@@ -67,17 +67,11 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  MathTexController _mathTexController;
-
   Widget buildText(String text) {
     print("TEXT  $text");
-    if (_mathTexController != null) _mathTexController.setText(text);
     return SizedBox(
       child: MathTex(
-        onMathjaxViewCreated: (controller) {
-          _mathTexController = controller;
-          controller.setText(text);
-        },
+        text: text,
         fontSize: 15,
       ),
       height: 35,

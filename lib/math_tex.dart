@@ -8,12 +8,12 @@ typedef void MathTexCreatedCallback(MathTexController controller);
 class MathTex extends StatefulWidget {
   MathTex({
     Key key,
-    this.onMathjaxViewCreated,
     this.fontSize,
+    this.text,
   }) : super(key: key);
 
-  final MathTexCreatedCallback onMathjaxViewCreated;
   final int fontSize;
+  final String text;
 
   @override
   State<StatefulWidget> createState() => _MathTexState();
@@ -22,16 +22,20 @@ class MathTex extends StatefulWidget {
 class _MathTexState extends State<MathTex> {
   MathTexController _mathTexController;
 
-
   MathTexController get mathTexController => _mathTexController;
 
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      print("BUILD VIEW");
+      if (_mathTexController != null && widget.text != null) {
+        _mathTexController.setText(widget.text);
+      }
       return AndroidView(
         viewType: 'plugins.com.nhapcs.math_tex/math_tex',
-        onPlatformViewCreated: _onPlatformViewCreated,
+        onPlatformViewCreated: (id) {
+          _mathTexController = MathTexController._(id);
+          _mathTexController.setText(widget.text);
+        },
         creationParams: <String, dynamic>{
           "fontSize": widget.fontSize,
         },
@@ -51,15 +55,6 @@ class _MathTexState extends State<MathTex> {
 
     return Text(
         '$defaultTargetPlatform is not yet supported by the mathjax_view plugin');
-  }
-
-  void _onPlatformViewCreated(int id) {
-    if (widget.onMathjaxViewCreated == null) {
-      return;
-    }
-    print("NEW $id");
-    _mathTexController = MathTexController._(id);
-    widget.onMathjaxViewCreated(_mathTexController);
   }
 
   @override

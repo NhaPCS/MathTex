@@ -1,14 +1,18 @@
 # math_tex
 
-A new Flutter plugin.
+A Flutter Package to render Latex text by Katex Lib: [online documentation](https://katex.org/). It is used for Android. For IOS you can use lib [plug-in package](https://pub.dev/packages/flutter_tex)
 
-## Getting Started
+## Example
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```
+ Widget buildText(String text) {
+    print("TEXT  $text");
+    return SizedBox(
+      child: MathTex( // MathTex init here
+        text: text,
+        fontSize: 15,
+      ),
+      height: 35,
+    );
+  }
+```
